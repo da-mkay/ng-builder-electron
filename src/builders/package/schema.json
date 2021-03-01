@@ -1,0 +1,101 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "title": "Create electron app packages using electron-builder",
+    "description": "The builder first builds the app using an electron build target and finally uses electron-builder to create electron app packages for that app.",
+    "definitions": {
+        "partialBuildOptions": {
+            "type": "object",
+            "properties": {
+                "outputPath": {
+                    "description": "The path relative to the workspace root where the final package.json will be written to. The main and renderer targets should be configured to place its output beneath that outputPath.",
+                    "type": "string"
+                },
+                "packageJsonPath": {
+                    "description": "The path of the package.json relative to the workspace root. That file is used as a base for the final package.json. The 'main' property will be set automatically based on the builder config.",
+                    "type": "string"
+                },
+                "main": {
+                    "description": "The path relative to the outputPath which will be used as electron's main file. This should fit your mainTarget configuration.",
+                    "type": "string"
+                },
+                "mainTarget": {
+                    "description": "The target that builds the project which will be run in electron's main thread. Set to either a string (format: 'project:target[:config]') or an object having the properties 'target' and 'options'. The latter allows to override the options specified in the target configuration.",
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "target": {
+                                    "type": "string",
+                                    "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                                },
+                                "options": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "rendererTargets": {
+                    "description": "An array of targets that build the projects which will be run in electron's renderer thread. Each array item must be either null (ignored), a string (format: 'project:target[:config]') or an object having the properties 'target' and 'options'. The latter allows to override the options specified in the target configuration.",
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                            },
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "target": {
+                                        "type": "string",
+                                        "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                                    },
+                                    "options": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "cleanOutputPath": {
+                    "description": "Whether to clean the ouputPath before running the main and renderer targets.",
+                    "type": "boolean",
+                    "default": true
+                }
+            }
+        }
+    },
+    "type": "object",
+    "properties": {
+        "buildTarget": {
+            "description": "The electron build target to run prior to packaging the electron app. This is either a string using the format 'project:build-target[:config]' or an object having the properties 'target' (in format 'project:build-target[:config]') and 'options' (an object that will be merged with - not just override - the original options of the build target).",
+            "oneOf": [
+                { "type": "string", "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "target": { "type": "string", "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$" },
+                        "options": { "$ref": "#/definitions/partialBuildOptions" }
+                    },
+                    "required": ["target"]
+                }
+            ]
+        },
+        "electronBuilderConfig": {
+            "description": "The configuration options for electron-builder.",
+            "type": "object"
+        }
+    },
+    "required": ["buildTarget", "electronBuilderConfig"],
+    "additionalProperties": true
+}

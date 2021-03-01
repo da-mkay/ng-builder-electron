@@ -1,0 +1,19 @@
+{
+    "builders": {
+        "build": {
+            "implementation": "./build/index.js",
+            "schema": "./build/schema.json",
+            "description": "Build projects for an electron app"
+        },
+        "package": {
+            "implementation": "./package/index.js",
+            "schema": "./package/schema.json",
+            "description": "Create electron app packages using electron-builder"
+        },
+        "serve": {
+            "implementation": "./serve/index.js",
+            "schema": "./serve/schema.json",
+            "description": "Build an app and open it in electron while reloading it once the code changes"
+        }
+    }
+}

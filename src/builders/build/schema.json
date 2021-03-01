@@ -1,0 +1,84 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "title": "Build projects for an electron app",
+    "description": "Build the app that can be packaged as an electron app. The builder will write the package.json to the outputPath and then run at least two targets: one target (mainTarget) that builds the project that will run in electron's main thread and one or more targets (rendererTargets) that build the projects which will run in electron's renderer thread.",
+    "type": "object",
+    "properties": {
+        "outputPath": {
+            "description": "The path relative to the workspace root where the final package.json will be written to. The main and renderer targets should be configured to place its output beneath that outputPath.",
+            "type": "string"
+        },
+        "packageJsonPath": {
+            "description": "The path of the package.json relative to the workspace root. That file is used as a base for the final package.json. The 'main' property will be set automatically based on the builder config.",
+            "type": "string"
+        },
+        "main": {
+            "description": "The path relative to the outputPath which will be used as electron's main file. This should fit your mainTarget configuration.",
+            "type": "string"
+        },
+        "mainTarget": {
+            "description": "The target that builds the project which will be run in electron's main thread. Set to either a string (format: 'project:target[:config]') or an object having the properties 'target' and 'options'. The latter allows to override the options specified in the target configuration.",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "target": {
+                            "type": "string",
+                            "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                        },
+                        "options": {
+                            "type": "object"
+                        }
+                    },
+                    "required": ["target"]
+                }
+            ]
+        },
+        "rendererTargets": {
+            "description": "An array of targets that build the projects which will be run in electron's renderer thread. Each array item must be either a string (format: 'project:target[:config]') or an object having the properties 'target' and 'options'. The latter allows to override the options specified in the target configuration.",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "target": {
+                                "type": "string",
+                                "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                            },
+                            "options": {
+                                "type": "object"
+                            }
+                        },
+                        "required": ["target"]
+                    }
+                ]
+            },
+            "minItems": 1
+        },
+        "cleanOutputPath": {
+            "description": "Whether to clean the ouputPath before running the main and renderer targets.",
+            "type": "boolean",
+            "default": true
+        },
+        "depcheck": {
+            "description": "Whether to run depcheck on the outputPath to find used dependencies that will be automatically taken from the root package.json and added to the final package.json.",
+            "type": "boolean",
+            "default": true
+        },
+        "depcheckOptions": {
+            "description": "Options to pass to depcheck. If not provided depcheck's default options are used with ignoreMatches set to ['electron']",
+            "type": "object"
+        }
+    },
+    "required": ["outputPath", "packageJsonPath", "main", "mainTarget", "rendererTargets"],
+    "additionalProperties": false
+}
