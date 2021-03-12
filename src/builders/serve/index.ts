@@ -99,6 +99,7 @@ export const execute = (options: ServeOptions, context: BuilderContext): Observa
         const paths = setupBuildOutputPath(buildOptions, context, {
             main: 'main_replaced.js', // TODO: make configurable?
             content: (relativeOriginalMainPath) => {
+                relativeOriginalMainPath = relativeOriginalMainPath.replace(/\\/g, '/'); // for win paths 
                 return `const electron = require('electron'); process.on('message', (m) => { if (m === '@da-mkay/ng-builder-electron:reload') { for (const window of electron.BrowserWindow.getAllWindows()) { window.reload(); } }}); require('./${relativeOriginalMainPath}');`;
             },
         });
