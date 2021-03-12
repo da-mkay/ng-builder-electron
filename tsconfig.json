@@ -1,16 +1,17 @@
 {
-  "compilerOptions": {
-    "baseUrl": "tsconfig",
-    "rootDir": "src",
-    "lib": ["es2018"],
-    "declaration": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "target": "es6",
-    "types": ["node"],
-    "outDir": "dist",
-    "allowSyntheticDefaultImports": true
-  },
-  "include": ["src/**/*.ts"]
+    "compilerOptions": {
+        "baseUrl": "tsconfig",
+        "rootDir": "src",
+        "lib": ["es2018"],
+        "declaration": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "target": "es6",
+        "types": ["node"],
+        "outDir": "dist",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/schematics/**/files/**/*.ts"]
 }

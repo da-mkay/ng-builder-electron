@@ -1,0 +1,20 @@
+{
+    "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics": {
+        "ng-add": {
+            "description": "Install dependencies of @da-mkay/ng-builder-electron.",
+            "factory": "./ng-add/index.js"
+        },
+        "ng-add-post-deps": {
+            "description": "Internal schematic that will be scheduled by ng-add.",
+            "factory": "./ng-add-post-deps/index.js",
+            "private": true
+        },
+        "application": {
+            "description": "Create a new electron application.",
+            "factory": "./application/index.js",
+            "schema": "./application/schema.json",
+            "aliases": ["app"]
+        }
+    }
+}

@@ -1,16 +1,17 @@
 {
     "name": "@da-mkay/ng-builder-electron",
     "version": "0.0.1",
-    "description": "A set of builders for the Angular CLI to build electron apps.",
+    "description": "A set of builders and schematics for the Angular CLI to build electron apps.",
     "repository": {
         "type": "git",
         "url": "https://github.com/da-mkay/ng-builder-electron.git"
     },
     "homepage": "https://github.com/da-mkay/ng-builder-electron",
     "scripts": {
-        "build": "npm run clean && tsc -p tsconfig.json && npm run copy:json",
+        "build": "npm run clean && tsc -p tsconfig.json && npm run copy:jsons && npm run copy:schematic-files",
         "clean": "rimraf dist",
-        "copy:json": "cpx 'src/**/*.json' ./dist"
+        "copy:jsons": "cpx 'src/**/{schema,collection,builders}.json' ./dist",
+        "copy:schematic-files": "cpx 'src/schematics/**/files/**' ./dist/schematics"
     },
     "husky": {
         "hooks": {
@@ -28,28 +29,37 @@
     "author": "da-mkay (https://github.com/da-mkay)",
     "license": "MIT",
     "peerDependencies": {
-        "@angular-devkit/architect": "^0.1102.0",
-        "@angular-devkit/core": "^11.2.0",
-        "rxjs": "6.6.3"
+        "typescript": ">=3.4 <4.2",
+        "rxjs": "^6.4.0"
     },
     "devDependencies": {
-        "@angular-devkit/architect": "^0.1102.0",
-        "@angular-devkit/core": "^11.2.0",
         "@types/fs-extra": "^9.0.7",
+        "@types/inquirer": "^7.3.1",
         "@types/node": "^14.14.26",
         "cpx": "^1.5.0",
         "husky": "^5.0.9",
+        "inquirer": "8.0.0",
         "prettier": "^2.2.1",
         "pretty-quick": "^3.1.0",
         "rimraf": "^3.0.2",
-        "rxjs": "6.6.3",
-        "typescript": "^4.1.5"
+        "rxjs": "^6.4.0",
+        "typescript": "~4.1.5"
     },
     "dependencies": {
+        "@angular-devkit/architect": ">=0.800.0 <0.900.0",
+        "@angular-devkit/core": "^8.0.0",
+        "@angular-devkit/schematics": "^8.0.0",
+        "@schematics/angular": "^8.0.0",
         "ansi-colors": "^4.1.1",
         "depcheck": "^1.4.0",
         "electron-builder": "^22.9.1",
-        "fs-extra": "^9.1.0"
+        "fs-extra": "^9.1.0",
+        "inquirer": "^7.0.0",
+        "semver": "^7.3.4"
     },
-    "builders": "./dist/builders/builders.json"
+    "builders": "./dist/builders/builders.json",
+    "schematics": "./dist/schematics/collection.json",
+    "ng-add": {
+        "save": "devDependencies"
+    }
 }

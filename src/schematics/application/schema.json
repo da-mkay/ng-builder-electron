@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "da-mkay_ng-builder-typescript_app",
+    "title": "Create a new Node.js application that is written in typescript",
+    "description": "Create a new Node.js application that is written in typescript",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "The base name of the created projects. If singleProject is false, the name is used as a prefix for the renderer-, main- and electron-project. If singleProject is true, this name is used as the name of the renderer project.",
+            "type": "string"
+        },
+        "singleProject": {
+            "description": "When set to false, multiple projects will be created (electron project, main project, renderer project). When set to true, one project will be created (or an existing will be used) for the renderer and the files for electron and the main code will be put beneath the renderer project folder.",
+            "type": "boolean",
+            "default": false
+        },
+        "rendererProject": {
+            "description": "When set to a project name, use that project as the renderer project and do not create a new one.",
+            "type": "string"
+        },
+        "mainBuilder": {
+            "description": "The builder to use for the code that will be run in electron's main thread. Use @da-mkay/ng-builder-typescript (default) if you plan to create a simple main project (uses just a typescript compiler). Use @richapps/ngnode if your main project will be more complex (uses webpack to bundle the project).",
+            "type": "string",
+            "enum": ["@da-mkay/ng-builder-typescript", "@richapps/ngnode"]
+        },
+        "enableNodeIntegration": {
+            "description": "If set to false (recommended, default) nodeIntegration will not be enabled. An example preload file will be created that provides functionalities to the renderer thread that require Node.js. If set to true, nodeIntegration will be enabled. Thus, you will be able to use Node.js modules in the renderer thread.",
+            "type": "boolean",
+            "default": false
+        }
+    }
+}
