@@ -20,7 +20,7 @@ export function scheduleTarget$(
     scheduleOptions?: ScheduleOptions
 ): Observable<BuilderRun> {
     return new Observable<BuilderRun>((observer) => {
-        // NOTE: resolve-logic taken form scheduleTargetAndForget
+        // NOTE: resolve-logic taken from scheduleTargetAndForget
         let resolve: (() => void) | null = null;
         const promise = new Promise<void>((r) => (resolve = r));
         context.addTeardown(() => promise);

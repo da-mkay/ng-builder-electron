@@ -70,7 +70,7 @@
             "default": true
         },
         "depcheck": {
-            "description": "Whether to run depcheck on the outputPath to find used dependencies that will be automatically taken from the root package.json and added to the final package.json.",
+            "description": "Whether to run depcheck on the outputPath to find used dependencies that will be automatically taken from the root package.json and added to the final package.json. Note that you can always manually add dependencies to your package.json (see packageJsonPath).",
             "type": "boolean",
             "default": true
         },
