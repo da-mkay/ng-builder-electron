@@ -1,6 +1,6 @@
 {
     "name": "@da-mkay/ng-builder-electron",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "A set of builders and schematics for the Angular CLI to build electron apps.",
     "repository": {
         "type": "git",
