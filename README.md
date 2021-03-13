@@ -8,7 +8,7 @@ Inspired by @richapps/ngtron, this set of builders and schematics allows you to 
 ## Table of Contents
 
 -   [General information](#general-information)
--   [Usage](#Usage)
+-   [Usage](#usage)
     -   [Create electron app from scratch (multiple projects, recommended)](#create-electron-app-from-scratch-multiple-projects-recommended)
     -   [Create electron app from scratch (single project)](#create-electron-app-from-scratch-single-project)
     -   [Reuse an existing Angluar project as renderer project](#reuse-an-existing-angluar-project-as-renderer-project)
