@@ -124,7 +124,6 @@ export default function (options: ApplicationOptions): Rule {
         const angularCoreVersion = angularDep ? angularDep.version.match(/\d+/)[0] : undefined;
         const customWebpackBuilderVersion = angularCoreVersion ? `^${angularCoreVersion}.0.0` : 'latest';
         options.mainBuilder = await getMainBuilderOptionOrPrompt(options, angularCoreVersion, context);
-        context.logger.warn('Would add dev dep here: ' + options.mainBuilder);
         addPackageJsonDependency(tree, {
             name: options.mainBuilder,
             type: NodeDependencyType.Dev,
