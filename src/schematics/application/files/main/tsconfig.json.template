@@ -8,7 +8,8 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": true,
-        "target": "es6"
+        "target": "es6",
+        "types": ["node"]
     },
     "include": ["./src/**/*.ts"]
 }
