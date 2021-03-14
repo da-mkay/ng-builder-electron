@@ -25,11 +25,11 @@ export default function (): Rule {
             const answerVersion = await inquirer.prompt<{ version: string }>([
                 {
                     name: 'version',
-                    message: 'Which electron version do you want to install (enter semver >= 7.0.0 or "latest")?',
+                    message: 'Which electron version do you want to install (enter semver >= 7.1.0 or "latest")?',
                     type: 'input',
                     default: 'latest',
                     validate: (input) =>
-                        !!input && (input === 'latest' || (semver.validRange(input) && semver.intersects(input, '>=7.0.0'))),
+                        !!input && (input === 'latest' || (semver.validRange(input) && semver.intersects(input, '>=7.1.0'))),
                 },
             ]);
             addPackageJsonDependency(tree, {
