@@ -15,6 +15,8 @@ Inspired by @richapps/ngtron, this set of builders and schematics allows you to 
 -   [Additional topics](#additional-topics)
     -   [Webpack externals](#webpack-externals)
     -   [Include node modules in the electron app package](#include-node-modules-in-the-electron-app-package)
+-   [F.A.Q.](#faq)
+    -   [Why does my screen keeps white when a soft-reload is performed?](#why-does-my-screen-keeps-white-when-a-soft-reload-is-performed)
 -   [App-schematic options](#app-schematic-options)
 -   [Builder options](#builder-options)
     -   [Builder: build](#builder-build)
@@ -172,6 +174,12 @@ The electron build builder also runs the `depcheck` tool on the output folder to
 Now, when running the electron package builder, `electron-builder` will be started which will take care of including the dependencies of the package.json into the final app.
 
 Maybe that's not enough and you need to add a dependency manually. Then just do that. You can always add dependencies manually to the package.json of your electron project. Since that package.json is used as a base for the final package.json, `electron-builder` will take these dependencies into account.
+
+## F.A.Q.
+
+### Why does my screen keeps white when a soft-reload is performed?
+
+In case you use Angular's router, it will change your window's location. Since a `file://` URL is used for electron it is important that the filename, i.e. `index.html`, stays in the URL. This requires you to use Angular's `HashLocationStrategy`. If you don't use `HashLocationStrategy`, the window's location may change to a URL that cannot be loaded by electron, resulting in a white screen.
 
 ## App-schematic options
 

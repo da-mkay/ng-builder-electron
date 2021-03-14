@@ -515,7 +515,7 @@ function addElectronTargets(rendererName: string): Rule {
                         target: `${rendererName}:build`,
                         options: {
                             outputPath: `dist/${rendererName}-electron/renderer`,
-                            baseHref: './',
+                            baseHref: './index.html',
                             customWebpackConfig: {
                                 path: relativeRoot(rendererProject.root, 'webpack_electron.config.js'),
                             },
@@ -530,7 +530,7 @@ function addElectronTargets(rendererName: string): Rule {
                             target: `${rendererName}:build:production`,
                             options: {
                                 outputPath: `dist/${rendererName}-electron/renderer`,
-                                baseHref: './',
+                                baseHref: './index.html',
                                 customWebpackConfig: {
                                     path: relativeRoot(rendererProject.root, 'webpack_electron.config.js'),
                                 },
@@ -633,7 +633,7 @@ function addElectronProject(appName: string, name: string, mainName: string, ren
                                         target: `${rendererName}:build`,
                                         options: {
                                             outputPath: `dist/${name}/renderer`,
-                                            baseHref: './',
+                                            baseHref: './index.html',
                                             customWebpackConfig: {
                                                 path: `${renderRoot}/webpack_electron.config.js`,
                                             },
@@ -648,7 +648,7 @@ function addElectronProject(appName: string, name: string, mainName: string, ren
                                             target: `${rendererName}:build:production`,
                                             options: {
                                                 outputPath: `dist/${name}/renderer`,
-                                                baseHref: './',
+                                                baseHref: './index.html',
                                                 customWebpackConfig: {
                                                     path: `${renderRoot}/webpack_electron.config.js`,
                                                 },
