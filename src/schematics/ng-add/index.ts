@@ -20,6 +20,7 @@ export default function (): Rule {
                 },
             ]);
             if (!answerInstall.install) {
+                context.logger.warn('NOTE: When installing electron in the future make sure that you install also the correct @types/node version!');
                 return;
             }
             const answerVersion = await inquirer.prompt<{ version: string }>([
