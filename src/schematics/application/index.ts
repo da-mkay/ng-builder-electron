@@ -127,7 +127,7 @@ export default function (options: ApplicationOptions): Rule {
         addPackageJsonDependency(tree, {
             name: options.mainBuilder,
             type: NodeDependencyType.Dev,
-            version: 'latest',
+            version: options.mainBuilder === '@da-mkay/ng-builder-typescript' ? '0.x': '>=1.0.2-rc.4 <2',
         });
         // Install @angular-builders/custom-webpack, because we need to modify webpack config (specify externals)
         addPackageJsonDependency(tree, {
@@ -388,12 +388,23 @@ function addTscMainTarget(rendererName: string, enableNodeIntegration: boolean):
         const rendererProject = workspace.projects.get(rendererName);
         const appDir = relativeRoot(rendererProject.root, 'main');
         const root = `${appDir}/`;
+        const sourceRoot = join(normalize(root), 'src');
         rendererProject.targets.add({
             name: 'main-build',
             builder: '@da-mkay/ng-builder-typescript:build',
             options: {
                 outputPath: `dist/${rendererName}-main`,
                 tsConfig: `${root}tsconfig.json`,
+            },
+            configurations: {
+                production: {
+                    fileReplacements: [
+                        {
+                            replace: `${sourceRoot}/environments/environment.ts`,
+                            with: `${sourceRoot}/environments/environment.prod.ts`,
+                        },
+                    ],
+                },
             },
         });
         return addMainFiles(appDir, root, enableNodeIntegration);
@@ -421,6 +432,16 @@ function addWebpackMainTarget(rendererName: string, enableNodeIntegration: boole
                     },
                 },
             },
+            configurations: {
+                production: {
+                    fileReplacements: [
+                        {
+                            replace: `${sourceRoot}/environments/environment.ts`,
+                            with: `${sourceRoot}/environments/environment.prod.ts`,
+                        },
+                    ],
+                },
+            },
         });
         return addMainFiles(appDir, root, enableNodeIntegration);
     });
@@ -443,6 +464,16 @@ function addTscMainProject(name: string, enableNodeIntegration: boolean): Rule {
                             options: {
                                 outputPath: `dist/${name}`,
                                 tsConfig: `${root}tsconfig.json`,
+                            },
+                            configurations: {
+                                production: {
+                                    fileReplacements: [
+                                        {
+                                            replace: `${sourceRoot}/environments/environment.ts`,
+                                            with: `${sourceRoot}/environments/environment.prod.ts`,
+                                        },
+                                    ],
+                                },
                             },
                         },
                     },
@@ -479,6 +510,16 @@ function addWebpackMainProject(name: string, enableNodeIntegration: boolean): Ru
                                         __dirname: false,
                                         __filename: false,
                                     },
+                                },
+                            },
+                            configurations: {
+                                production: {
+                                    fileReplacements: [
+                                        {
+                                            replace: `${sourceRoot}/environments/environment.ts`,
+                                            with: `${sourceRoot}/environments/environment.prod.ts`,
+                                        },
+                                    ],
                                 },
                             },
                         },
@@ -525,6 +566,12 @@ function addElectronTargets(rendererName: string): Rule {
             },
             configurations: {
                 production: {
+                    mainTarget: {
+                        target: `${rendererName}:main-build:production`,
+                        options: {
+                            outputPath: `dist/${rendererName}-electron/main`,
+                        },
+                    },
                     rendererTargets: [
                         {
                             target: `${rendererName}:build:production`,
@@ -643,6 +690,12 @@ function addElectronProject(appName: string, name: string, mainName: string, ren
                             },
                             configurations: {
                                 production: {
+                                    mainTarget: {
+                                        target: `${mainName}:build:production`,
+                                        options: {
+                                            outputPath: `dist/${name}/main`,
+                                        },
+                                    },
                                     rendererTargets: [
                                         {
                                             target: `${rendererName}:build:production`,

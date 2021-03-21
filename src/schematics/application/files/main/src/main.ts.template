@@ -1,5 +1,8 @@
 import { join } from 'path';
 import { app, BrowserWindow<% if (!enableNodeIntegration) { %>, ipcMain<% } %> } from 'electron';
+import { environment } from './environments/environment';
+
+console.log('Running production build:', environment.production);
 
 function createWindow() {
     const win = new BrowserWindow({
