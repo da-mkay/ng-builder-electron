@@ -1,7 +1,7 @@
 import { BuilderContext, BuilderOutput, createBuilder, targetFromTargetString } from '@angular-devkit/architect';
 import { from, Observable, combineLatest, defer, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { BuildOptions } from './options';
+import { BuildOptions, normalizeBuildOptions } from './options';
 import { setupBuildOutputPath } from '../utils/setup-build-output-path';
 import { PrefixLogger } from '../utils/prefix-logger';
 import { getTargetRef } from '../utils/target-ref';
@@ -15,6 +15,7 @@ import * as path from 'path';
  * Moreover, create a package.json in the outputPath which can then be used by electron.
  */
 export const execute = (options: BuildOptions, context: BuilderContext): Observable<BuilderOutput> => {
+    options = normalizeBuildOptions(options);
     const parentLogger = context.logger.createChild('');
     const logger = new PrefixLogger('Build', parentLogger, null, true);
     return defer(async () => {

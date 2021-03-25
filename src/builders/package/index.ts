@@ -2,21 +2,16 @@ import { BuilderContext, BuilderOutput, createBuilder, targetFromTargetString } 
 import { from, Observable, defer, of } from 'rxjs';
 import { JsonObject } from '@angular-devkit/core';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-import { BuildOptions, mergeBuildOptions, PartialBuildOptions } from '../build/options';
+import { BuildOptions, mergeBuildOptions } from '../build/options';
 import * as electronBuilder from 'electron-builder';
 import { getTargetRef } from '../utils/target-ref';
 import { PrefixLogger } from '../utils/prefix-logger';
+import { BuildTargetOptions, normalizeBuildTargetOptions } from '../utils/build-target-options';
 
 /**
  * Options for the "package" builder.
  */
-export interface PackageOptions extends JsonObject {
-    buildTarget:
-        | string
-        | {
-              target: string;
-              options?: PartialBuildOptions;
-          };
+export interface PackageOptions extends BuildTargetOptions {
     electronBuilderConfig: JsonObject;
 }
 
@@ -24,6 +19,7 @@ export interface PackageOptions extends JsonObject {
  * Run the electron-build target, then use electron-builder to build the final electron package.
  */
 export const execute = (options: PackageOptions, context: BuilderContext): Observable<BuilderOutput> => {
+    options = normalizeBuildTargetOptions(options);
     const parentLogger = context.logger.createChild('');
     const logger = new PrefixLogger('Package', parentLogger, null, true);
     return defer(async () => {

@@ -127,7 +127,7 @@ export default function (options: ApplicationOptions): Rule {
         addPackageJsonDependency(tree, {
             name: options.mainBuilder,
             type: NodeDependencyType.Dev,
-            version: options.mainBuilder === '@da-mkay/ng-builder-typescript' ? '0.x': '>=1.0.2-rc.4 <2',
+            version: options.mainBuilder === '@da-mkay/ng-builder-typescript' ? '0.x' : '>=1.0.2-rc.4 <2',
         });
         // Install @angular-builders/custom-webpack, because we need to modify webpack config (specify externals)
         addPackageJsonDependency(tree, {
@@ -566,22 +566,12 @@ function addElectronTargets(rendererName: string): Rule {
             },
             configurations: {
                 production: {
-                    mainTarget: {
+                    mainTargetOverrides: {
                         target: `${rendererName}:main-build:production`,
-                        options: {
-                            outputPath: `dist/${rendererName}-electron/main`,
-                        },
                     },
-                    rendererTargets: [
+                    rendererTargetsOverrides: [
                         {
                             target: `${rendererName}:build:production`,
-                            options: {
-                                outputPath: `dist/${rendererName}-electron/renderer`,
-                                baseHref: './index.html',
-                                customWebpackConfig: {
-                                    path: relativeRoot(rendererProject.root, 'webpack_electron.config.js'),
-                                },
-                            },
                         },
                     ],
                 },
@@ -612,13 +602,20 @@ function addElectronTargets(rendererName: string): Rule {
                     },
                 },
             },
+            configurations: {
+                production: {
+                    buildTargetOverrides: {
+                        target: `${rendererName}:electron-build:production`,
+                    },
+                },
+            },
         });
         rendererProject.targets.add({
             name: 'electron-package',
             builder: '@da-mkay/ng-builder-electron:package',
             options: {
                 buildTarget: {
-                    target: `${rendererName}:electron-build:production`,
+                    target: `${rendererName}:electron-build`,
                     options: {
                         outputPath: `dist/${rendererName}-electron-package/app`,
                         mainTarget: {
@@ -642,6 +639,13 @@ function addElectronTargets(rendererName: string): Rule {
                             app: `dist/${rendererName}-electron-package/app`,
                             output: `dist/${rendererName}-electron-package/pkg`,
                         },
+                    },
+                },
+            },
+            configurations: {
+                production: {
+                    buildTargetOverrides: {
+                        target: `${rendererName}:electron-build:production`,
                     },
                 },
             },
@@ -690,22 +694,12 @@ function addElectronProject(appName: string, name: string, mainName: string, ren
                             },
                             configurations: {
                                 production: {
-                                    mainTarget: {
+                                    mainTargetOverrides: {
                                         target: `${mainName}:build:production`,
-                                        options: {
-                                            outputPath: `dist/${name}/main`,
-                                        },
                                     },
-                                    rendererTargets: [
+                                    rendererTargetsOverrides: [
                                         {
                                             target: `${rendererName}:build:production`,
-                                            options: {
-                                                outputPath: `dist/${name}/renderer`,
-                                                baseHref: './index.html',
-                                                customWebpackConfig: {
-                                                    path: `${renderRoot}/webpack_electron.config.js`,
-                                                },
-                                            },
                                         },
                                     ],
                                 },
@@ -735,12 +729,19 @@ function addElectronProject(appName: string, name: string, mainName: string, ren
                                     },
                                 },
                             },
+                            configurations: {
+                                production: {
+                                    buildTargetOverrides: {
+                                        target: `${name}:build:production`,
+                                    },
+                                },
+                            },
                         },
                         package: {
                             builder: '@da-mkay/ng-builder-electron:package',
                             options: {
                                 buildTarget: {
-                                    target: `${name}:build:production`,
+                                    target: `${name}:build`,
                                     options: {
                                         outputPath: `dist/${name}-package/app`,
                                         mainTarget: {
@@ -764,6 +765,13 @@ function addElectronProject(appName: string, name: string, mainName: string, ren
                                             app: `dist/${name}-package/app`,
                                             output: `dist/${name}-package/pkg`,
                                         },
+                                    },
+                                },
+                            },
+                            configurations: {
+                                production: {
+                                    buildTargetOverrides: {
+                                        target: `${name}:build:production`,
                                     },
                                 },
                             },

@@ -39,8 +39,57 @@
                         }
                     ]
                 },
+                "mainTargetOverrides": {
+                    "description": "Overrides for the 'mainTarget' option. Can be used to override target name and/or part of the options. Useful when using configurations in your angular.json.",
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "target": {
+                                    "type": "string",
+                                    "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                                },
+                                "options": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    ]
+                },
                 "rendererTargets": {
                     "description": "An array of targets that build the projects which will be run in electron's renderer thread. Each array item must be either null (ignored), a string (format: 'project:target[:config]') or an object having the properties 'target' and 'options'. The latter allows to override the options specified in the target configuration.",
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                            },
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "target": {
+                                        "type": "string",
+                                        "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                                    },
+                                    "options": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "rendererTargetsOverrides": {
+                    "description": "Overrides for the 'rendererTargets' option. Can be used to override target name and/or part of the options. Useful when using configurations in your angular.json.",
                     "type": "array",
                     "items": {
                         "oneOf": [
@@ -88,6 +137,19 @@
                         "options": { "$ref": "#/definitions/partialBuildOptions" }
                     },
                     "required": ["target"]
+                }
+            ]
+        },
+        "buildTargetOverrides": {
+            "description": "Overrides for the 'buildTarget' option. Can be used to override target name and/or part of the options. Useful when using configurations in your angular.json.",
+            "oneOf": [
+                { "type": "string", "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "target": { "type": "string", "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$" },
+                        "options": { "$ref": "#/definitions/partialBuildOptions" }
+                    }
                 }
             ]
         },

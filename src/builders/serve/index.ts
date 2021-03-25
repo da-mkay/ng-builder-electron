@@ -7,28 +7,21 @@ import {
     BuilderRun,
 } from '@angular-devkit/architect';
 import { Observable, combineLatest, defer, of, merge, EMPTY } from 'rxjs';
-import { JsonObject } from '@angular-devkit/core';
 import { catchError, distinctUntilChanged, map, scan, switchMap, tap } from 'rxjs/operators';
 import { setupBuildOutputPath } from '../utils/setup-build-output-path';
-import { PartialBuildOptions, BuildOptions, mergeBuildOptions } from '../build/options';
+import { BuildOptions, mergeBuildOptions, normalizeBuildOptions } from '../build/options';
 import { electronRunner } from '../utils/electron-runner';
 import { PrefixLogger } from '../utils/prefix-logger';
 import { getTargetRef } from '../utils/target-ref';
 import { dim } from 'ansi-colors';
 import { scheduleTarget$ } from '../utils/schedule-target';
+import { BuildTargetOptions, normalizeBuildTargetOptions } from '../utils/build-target-options';
 import { existsSync } from 'fs-extra';
 
 /**
  * Options for the "serve" builder.
  */
-export interface ServeOptions extends JsonObject {
-    buildTarget:
-        | string
-        | {
-              target: string;
-              options?: PartialBuildOptions;
-          };
-}
+export interface ServeOptions extends BuildTargetOptions {}
 
 /**
  * Represents a target that was scheduled.
@@ -84,12 +77,13 @@ interface TargetsResult {
  * Each time all targets have finished (rebuilt code), electron is (re-)spawned or reloaded.
  */
 export const execute = (options: ServeOptions, context: BuilderContext): Observable<BuilderOutput> => {
+    options = normalizeBuildTargetOptions(options);
     const parentLogger = context.logger.createChild('');
     const logger = new PrefixLogger('Serve', parentLogger, null, true);
     return defer(async () => {
         const buildTargetRef = getTargetRef(options.buildTarget);
         const buildTarget = targetFromTargetString(buildTargetRef.target);
-        const originalBuildOptions = (await context.getTargetOptions(buildTarget)) as BuildOptions;
+        const originalBuildOptions = normalizeBuildOptions((await context.getTargetOptions(buildTarget)) as BuildOptions);
         const buildOptions = mergeBuildOptions(originalBuildOptions, buildTargetRef.options);
         const builderName = await context.getBuilderNameForTarget(buildTarget);
         // Validate options because we can end up with a mainTarget or rendererTarget without target name.
@@ -99,7 +93,7 @@ export const execute = (options: ServeOptions, context: BuilderContext): Observa
         const paths = setupBuildOutputPath(buildOptions, context, {
             main: 'main_replaced.js', // TODO: make configurable?
             content: (relativeOriginalMainPath) => {
-                relativeOriginalMainPath = relativeOriginalMainPath.replace(/\\/g, '/'); // for win paths 
+                relativeOriginalMainPath = relativeOriginalMainPath.replace(/\\/g, '/'); // for win paths
                 return `const electron = require('electron'); process.on('message', (m) => { if (m === '@da-mkay/ng-builder-electron:reload') { for (const window of electron.BrowserWindow.getAllWindows()) { window.reload(); } }}); require('./${relativeOriginalMainPath}');`;
             },
         });

@@ -3,17 +3,26 @@ import { mergeOptions } from '../utils/merge-options';
 import { getTargetRef, TargetRef } from '../utils/target-ref';
 
 /**
- * Options for the "build" builder.
+ * Common options for the "build" builder.
+ * Used as a base for both BuildOptions and PartialBuildOptions.
  */
-export interface BuildOptions extends JsonObject {
+export interface CommonBuildOptions extends JsonObject {
     outputPath: string;
     cleanOutputPath: boolean;
     main: string;
     packageJsonPath: string;
-    rendererTargets: (string | TargetRef)[];
-    mainTarget: string | TargetRef;
+    rendererTargetsOverrides?: (string | Partial<TargetRef>)[];
+    mainTargetOverrides?: string | Partial<TargetRef>;
     depcheck: boolean;
     depcheckOptions?: JsonObject;
+}
+
+/**
+ * Options for the "build" builder.
+ */
+export interface BuildOptions extends CommonBuildOptions {
+    rendererTargets: (string | TargetRef)[];
+    mainTarget: string | TargetRef;
 }
 
 /**
@@ -24,9 +33,29 @@ export interface BuildOptions extends JsonObject {
  * target config, e.g. only the options but not the target name. In that case the target name should be
  * taken from original BuildOptions and it's target options should be merged with the provided options.
  */
-export interface PartialBuildOptions extends Partial<Omit<BuildOptions, 'rendererTargets' | 'mainTarget'>> {
+export interface PartialBuildOptions extends Partial<CommonBuildOptions> {
     rendererTargets?: (string | Partial<TargetRef>)[];
     mainTarget?: string | Partial<TargetRef>;
+}
+
+/**
+ * Normalize build options, i.e. merge mainTargetOverrides and rendererTargetsOverrides into mainTarget
+ * and rendererTargets, respectively.
+ */
+export function normalizeBuildOptions(options: BuildOptions): BuildOptions;
+export function normalizeBuildOptions(options: PartialBuildOptions): PartialBuildOptions;
+export function normalizeBuildOptions(options: BuildOptions | PartialBuildOptions): BuildOptions | PartialBuildOptions {
+    const overrides: PartialBuildOptions = {};
+    if (options.mainTargetOverrides) {
+        overrides.mainTarget = options.mainTargetOverrides;
+    }
+    if (options.rendererTargetsOverrides) {
+        overrides.rendererTargets = options.rendererTargetsOverrides;
+    }
+    options = mergeBuildOptions(options, overrides);
+    delete options.mainTargetOverrides;
+    delete options.rendererTargetsOverrides;
+    return options;
 }
 
 /**
@@ -37,15 +66,20 @@ export interface PartialBuildOptions extends Partial<Omit<BuildOptions, 'rendere
  * @param options the base BuildOptions
  * @param additionalOptions the PartialBuildOptions options to merge with
  */
-export function mergeBuildOptions(options: BuildOptions, additionalOptions: PartialBuildOptions) {
+export function mergeBuildOptions(options: BuildOptions, additionalOptions: PartialBuildOptions): BuildOptions;
+export function mergeBuildOptions(options: PartialBuildOptions, additionalOptions: PartialBuildOptions): PartialBuildOptions;
+export function mergeBuildOptions(
+    options: BuildOptions | PartialBuildOptions,
+    additionalOptions: PartialBuildOptions
+): BuildOptions | PartialBuildOptions {
     if (!additionalOptions) {
         return options;
     }
     const props: string[] = Object.keys(additionalOptions);
     for (const prop of props) {
         if (prop === 'mainTarget') {
-            const originalMainTarget = getTargetRef(options['mainTarget']);
-            const mainTargetOverrides = getTargetRef(additionalOptions['mainTarget']);
+            const originalMainTarget = getTargetRef(options.mainTarget);
+            const mainTargetOverrides = getTargetRef(additionalOptions.mainTarget);
             options.mainTarget = {
                 target: mainTargetOverrides.target ?? originalMainTarget.target,
                 options: mergeOptions(originalMainTarget.options, mainTargetOverrides.options),

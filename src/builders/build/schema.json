@@ -38,6 +38,27 @@
                 }
             ]
         },
+        "mainTargetOverrides": {
+            "description": "Overrides for the 'mainTarget' option. Can be used to override target name and/or part of the options. Useful when using configurations in your angular.json.",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "target": {
+                            "type": "string",
+                            "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                        },
+                        "options": {
+                            "type": "object"
+                        }
+                    }
+                }
+            ]
+        },
         "rendererTargets": {
             "description": "An array of targets that build the projects which will be run in electron's renderer thread. Each array item must be either a string (format: 'project:target[:config]') or an object having the properties 'target' and 'options'. The latter allows to override the options specified in the target configuration.",
             "type": "array",
@@ -59,6 +80,31 @@
                             }
                         },
                         "required": ["target"]
+                    }
+                ]
+            },
+            "minItems": 1
+        },
+        "rendererTargetsOverrides": {
+            "description": "Overrides for the 'rendererTargets' option. Can be used to override target name and/or part of the options. Useful when using configurations in your angular.json.",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "target": {
+                                "type": "string",
+                                "pattern": "^[^:\\s]+:[^:\\s]+(:[^\\s]+)?$"
+                            },
+                            "options": {
+                                "type": "object"
+                            }
+                        }
                     }
                 ]
             },
