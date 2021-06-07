@@ -8,7 +8,7 @@ export default function (): Rule {
     return async (tree: Tree, context: SchematicContext) => {
         const dep = getPackageJsonDependency(tree, 'electron');
         if (dep) {
-            context.addTask(new RunSchematicTask('ng-add-post-deps', null));
+            context.addTask(new RunSchematicTask('ng-add-post-deps', {}));
             return; // electron already in package.json
         }
         if (context.interactive) {
@@ -46,6 +46,6 @@ export default function (): Rule {
             });
         }
         const installTaskID = context.addTask(new NodePackageInstallTask());
-        context.addTask(new RunSchematicTask('ng-add-post-deps', null), [installTaskID]);
+        context.addTask(new RunSchematicTask('ng-add-post-deps', {}), [installTaskID]);
     };
 }
