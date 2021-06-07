@@ -66,6 +66,10 @@ interface TargetsResult {
      * "soft" means the electron windows are reloaded.
      */
     reload?: 'hot' | 'soft';
+    /**
+     * Whether to reset the current aggregated output.
+     */
+    resetOutput?: boolean;
 }
 
 /**
@@ -181,23 +185,30 @@ export const execute = (options: ServeOptions, context: BuilderContext): Observa
             return merge(runningState$, outputs$).pipe(
                 scan<TargetRunningState | BuilderOutput[], TargetsResult>(
                     (result, runningStateOrOutputs) => {
-                        result.output = null;
+                        if (result.resetOutput) {
+                            result.resetOutput = false;
+                            result.output = null;
+                        }
                         result.reload = null;
                         if (Array.isArray(runningStateOrOutputs)) {
-                            if (!result.curAnyRunning) {
-                                result.output = { success: runningStateOrOutputs.every((o) => o.success) };
-                                if (result.output.success && !existsSync(mainPath)) {
-                                    result.output = { success: false };
-                                    logger.error(`All targets finished, but main file ${mainPath} does not exist. Wrong configuration?`);
-                                }
-                                result.reload = result.mainWasRunning ? 'hot' : 'soft';
-                                result.mainWasRunning = false;
-                                result.rendererWasRunning = false;
-                            }
+                            result.output = { success: runningStateOrOutputs.every((o) => o.success) };
                         } else {
                             result.mainWasRunning = result.mainWasRunning || runningStateOrOutputs.main;
                             result.rendererWasRunning = result.rendererWasRunning || runningStateOrOutputs.renderer;
                             result.curAnyRunning = runningStateOrOutputs.main || runningStateOrOutputs.renderer;
+                        }
+                        if (!result.curAnyRunning && result.output) {
+                            if (result.output.success) {
+                                if (existsSync(mainPath)) {
+                                    result.reload = result.mainWasRunning ? 'hot' : 'soft';
+                                } else {
+                                    result.output = { success: false };
+                                    logger.error(`All targets finished, but main file ${mainPath} does not exist. Wrong configuration?`);
+                                }
+                            }
+                            result.resetOutput = true;
+                            result.mainWasRunning = false;
+                            result.rendererWasRunning = false;
                         }
                         return result;
                     },
@@ -208,7 +219,7 @@ export const execute = (options: ServeOptions, context: BuilderContext): Observa
                     }
                 ),
                 tap((result) => {
-                    if (!result.output?.success) {
+                    if (!result.reload) {
                         return;
                     }
                     logger.info(`Perform electron ${result.reload} reload`);
@@ -223,7 +234,7 @@ export const execute = (options: ServeOptions, context: BuilderContext): Observa
                     }
                 }),
                 switchMap((result) => {
-                    if (result.output === null) {
+                    if (!result.resetOutput) {
                         return EMPTY;
                     }
                     return of(result.output);
