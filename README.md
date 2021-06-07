@@ -5,8 +5,14 @@ Inspired by @richapps/ngtron, this set of builders and schematics allows you to 
 > **So what's the difference to @richapps/ngtron?** While @richapps/ngtron does all its magic in the background, @da-mkay/ng-builder-electron is highly configurable. It allows you to configure each and every part of the build process, but it also requires you to do so. Luckily, most - if not all - configuration is done by schematics automatically to get started.\
 > And why should I care about configurability? For example, it allows you to choose any builder for your renderer and main project and you can use any of the builder's configuration options.
 
+## Versions
+
+This version requires Angular 8, 9, 10 or 11.\
+For other Angular versions take a look at the [Versions page](https://www.npmjs.com/package/@da-mkay/ng-builder-typescript?activeTab=versions).
+
 ## Table of Contents
 
+-   [Quickstart](#quickstart)
 -   [General information](#general-information)
 -   [Usage](#usage)
     -   [Create electron app from scratch (multiple projects, recommended)](#create-electron-app-from-scratch-multiple-projects-recommended)
@@ -23,6 +29,35 @@ Inspired by @richapps/ngtron, this set of builders and schematics allows you to 
     -   [Builder: serve](#builder-serve)
     -   [Builder: package](#builder-package)
 -   [Changelog](#changelog)
+
+## Quickstart
+
+To quickly generate a new electron app perform the following steps. See the documentation below for further information.
+
+Create a new empty Angular workspace, then install @da-mkay/ng-builder-electron:
+
+    $ ng new myworkspace --create-application=false
+    $ cd myworkspace
+    $ ng add @da-mkay/ng-builder-electron
+
+Then create your Angular app.
+
+    $ ng generate @da-mkay/ng-builder-electron:app
+
+It will ask you for a name for your projects. Type `myapp` and hit enter.\
+When prompted for other information you can simply hit enter to use the default values. Read below for more information.
+
+Now it's time to run your new electron app:
+
+    $ ng serve myapp-electron
+
+Each time you change your code the electron window will reload or the electron process will be restarted.
+
+To create an app package for your electron app run the following command:
+
+    $ ng run myapp-electron:package
+
+Now, you can find your app package in `dist/myapp-electron-package/pkg`.
 
 ## General information
 
