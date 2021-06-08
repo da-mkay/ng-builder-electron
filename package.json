@@ -29,8 +29,8 @@
     "author": "da-mkay (https://github.com/da-mkay)",
     "license": "MIT",
     "peerDependencies": {
-        "typescript": ">=3.4 <4.2",
-        "rxjs": "^6.4.0"
+        "typescript": ">=3.4 <4.3",
+        "rxjs": "^6.6.0"
     },
     "devDependencies": {
         "@types/fs-extra": "^9.0.7",
@@ -38,23 +38,22 @@
         "@types/node": "^14.14.26",
         "cpx": "^1.5.0",
         "husky": "^5.0.9",
-        "inquirer": "8.0.0",
         "prettier": "^2.2.1",
         "pretty-quick": "^3.1.0",
         "rimraf": "^3.0.2",
         "rxjs": "^6.4.0",
-        "typescript": "~4.1.5"
+        "typescript": "~4.2.0"
     },
     "dependencies": {
-        "@angular-devkit/architect": ">=0.800.0 <0.900.0",
-        "@angular-devkit/core": "^8.0.0",
-        "@angular-devkit/schematics": "^8.0.0",
-        "@schematics/angular": "^8.0.0",
+        "@angular-devkit/architect": ">=0.1200.0 <0.1300.0",
+        "@angular-devkit/core": "^12.0.0",
+        "@angular-devkit/schematics": "^12.0.0",
+        "@schematics/angular": "^12.0.0",
         "ansi-colors": "^4.1.1",
         "depcheck": "^1.4.0",
         "electron-builder": "^22.9.1",
         "fs-extra": "^9.1.0",
-        "inquirer": "^7.0.0",
+        "inquirer": "^8.0.0",
         "semver": "^7.3.4"
     },
     "builders": "./dist/builders/builders.json",

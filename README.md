@@ -7,8 +7,18 @@ Inspired by @richapps/ngtron, this set of builders and schematics allows you to 
 
 ## Versions
 
-This version requires Angular 8, 9, 10 or 11.\
-For other Angular versions take a look at the [Versions page](https://www.npmjs.com/package/@da-mkay/ng-builder-typescript?activeTab=versions).
+This version of @da-mkay/ng-builder-electron requires Angular 12. Use the tag `ng12` when installing this version, like so:\
+`ng add @da-mkay/ng-builder-electron@ng12`
+
+For other Angular versions take a look at the table below or at the [Versions page](https://www.npmjs.com/package/@da-mkay/ng-builder-electron?activeTab=versions).
+| Angular Version | Tag for @da-mkay/ng-builder-electron |
+| --------------- | ---------------------------------------|
+| Angular 12      | ng12                                   |
+| Angular 11      | ng11                                   |
+| Angular 10      | ng10                                   |
+| Angular 9       | ng9                                    |
+| Angular 8       | ng8                                    |
+
 
 ## Table of Contents
 
@@ -38,7 +48,9 @@ Create a new empty Angular workspace, then install @da-mkay/ng-builder-electron:
 
     $ ng new myworkspace --create-application=false
     $ cd myworkspace
-    $ ng add @da-mkay/ng-builder-electron
+    $ ng add @da-mkay/ng-builder-electron@ng12
+
+(Using the tag `ng12`, the Angular 12 compatible version will be installed)
 
 Then create your Angular app.
 
@@ -96,7 +108,7 @@ First, create a new **_empty_** Angular workspace:
 
 To install the builder and schematics, simply use `ng add`:
 
-    $ ng add @da-mkay/ng-builder-electron
+    $ ng add @da-mkay/ng-builder-electron@ng12
 
 If you do not have electron in your package.json's dependencies it will ask you which version to install. Once installed, it will check which version of `@types/node` package is installed and compare it to the Node.js version used by the installed electron version. If they do not match, it will ask you whether it should install the correct one.
 
@@ -108,7 +120,7 @@ It will ask you a few questions:
 
 1. First, it asks for the name to use for the projects that will be created. If you enter `myapp` the following three projects will be created: `myapp-electron`, `myapp-renderer` and `myapp-main`.\
    The `*-main` project is a Node.js app written in typescript that will run in electrons main process. The `*-renderer` project is a normal Angular app that will be shown in an electron window. The `*-electron` project simply holds the package.json that will be used as a base when generating the final package.json for the electron app (see [General information](#general-information)).
-2. The second question is about the builder that should be used for the main project. @da-mkay/ng-builder-typescript will simply use the typescript compiler to compile the code. If you will have a more complex main project then you can also use @richapps/ngnode, which uses webpack to bundle the main project.
+2. The second question is about the builder that should be used for the main project. @da-mkay/ng-builder-typescript will simply use the typescript compiler to compile the code. If you will have a more complex main project then you can also use @richapps/ngnode, which uses webpack to bundle the main project. (At the time this version of @da-mkay/ng-builder-electron was released, @richapps/ngnode was not yet fully Angular 12 compatible)
 3. Finally, the Angular app schematic is started to create an Angular application as the renderer project. The questions that appear (about Angular routing, sylesheet format etc.) are standard Angular questions.
 
 You are now ready to serve the electron app:
@@ -138,7 +150,7 @@ First, create a new **_empty_** Angular workspace:
 
 To install the builder and schematics, simply use `ng add`:
 
-    $ ng add @da-mkay/ng-builder-electron
+    $ ng add @da-mkay/ng-builder-electron@ng12
 
 Again (see above) it may ask you to install electron and appropriate `@types/node` package.
 
@@ -150,7 +162,7 @@ It will ask you a few questions:
 
 1. First, it asks for the name to use for the project that will be created.\
    That project will be a regular Angular app having the additional two sub folders `main` and `electron`. The `main` folder holds the typescript code for a Node.js app that will run in electrons main process. The `electron` folder simply holds the package.json that will be used as a base when generating the final package.json for the electron app (see [General information](#general-information)).
-2. The second question is about the builder that should be used for the main code. @da-mkay/ng-builder-typescript will simply use the typescript compiler to compile the code. If you will have a more complex main code then you can also use @richapps/ngnode, which uses webpack to bundle the code.
+2. The second question is about the builder that should be used for the main code. @da-mkay/ng-builder-typescript will simply use the typescript compiler to compile the code. If you will have a more complex main code then you can also use @richapps/ngnode, which uses webpack to bundle the code. (At the time this version of @da-mkay/ng-builder-electron was released, @richapps/ngnode was not yet fully Angular 12 compatible)
 3. Finally, the Angular app schematic is started to create an Angular application. The questions that appear (about Angular routing, sylesheet format etc.) are standard Angular questions.
 
 You are now ready to serve the electron app:
@@ -179,7 +191,7 @@ Here are the examples of the last chapters with the `--renderer-project` option 
 ... using additional projects for the main code and electron resources:
 
 ```
-$ ng add @da-mkay/ng-builder-electron
+$ ng add @da-mkay/ng-builder-electron@ng12
 $ ng generate @da-mkay/ng-builder-electron:app --renderer-project=PROJECT_NAME
 ```
 
@@ -188,7 +200,7 @@ OR
 ... by putting main code and electron resources beneath your Angular project folder without creating additional projects:
 
 ```
-$ ng add @da-mkay/ng-builder-electron
+$ ng add @da-mkay/ng-builder-electron@ng12
 $ ng generate @da-mkay/ng-builder-electron:app --renderer-project=PROJECT_NAME --single-project
 ```
 
@@ -243,7 +255,7 @@ When set to a project name, use that project as the renderer project and do not 
 
 **mainBuilder**: `'@da-mkay/ng-builder-typescript' | '@richapps/ngnode'`\
 (default: `'@da-mkay/ng-builder-typescript'`)\
-The builder to use for the code that will be run in electron's main process. Use '@da-mkay/ng-builder-typescript' if you plan to create a simple main project (uses just a typescript compiler). Use '@richapps/ngnode' if your main project will be more complex (uses webpack to bundle the project).
+The builder to use for the code that will be run in electron's main process. Use '@da-mkay/ng-builder-typescript' if you plan to create a simple main project (uses just a typescript compiler). Use '@richapps/ngnode' if your main project will be more complex (uses webpack to bundle the project). (At the time this version of @da-mkay/ng-builder-electron was released, @richapps/ngnode was not yet fully Angular 12 compatible)
 
 **enableNodeIntegration**: `boolean`\
 (default: `false`)\

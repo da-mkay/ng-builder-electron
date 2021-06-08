@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "id": "da-mkay_ng-builder-typescript_app",
+    "$id": "da-mkay_ng-builder-typescript_app",
     "title": "Create a new Node.js application that is written in typescript",
     "description": "Create a new Node.js application that is written in typescript",
     "type": "object",

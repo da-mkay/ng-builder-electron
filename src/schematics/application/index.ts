@@ -127,7 +127,7 @@ export default function (options: ApplicationOptions): Rule {
         addPackageJsonDependency(tree, {
             name: options.mainBuilder,
             type: NodeDependencyType.Dev,
-            version: options.mainBuilder === '@da-mkay/ng-builder-typescript' ? '0.x' : '>=1.0.2-rc.4 <2',
+            version: options.mainBuilder === '@da-mkay/ng-builder-typescript' ? '^12.0.0' : '>=1.0.2-rc.4 <2',
         });
         // Install @angular-builders/custom-webpack, because we need to modify webpack config (specify externals)
         addPackageJsonDependency(tree, {
@@ -203,7 +203,7 @@ async function getMainBuilderOptionOrPrompt(options: ApplicationOptions, angular
                     value: '@da-mkay/ng-builder-typescript',
                     label: '@da-mkay/ng-builder-typescript [ for simple projects, uses only typescript compiler ]',
                 },
-                { value: '@richapps/ngnode', label: '@richapps/ngnode               [ for complex projects, uses webpack ]' },
+                { value: '@richapps/ngnode', label: '@richapps/ngnode               [ for complex projects, uses webpack, maybe not fully Angular 12 compatible ]' },
             ];
             const answer = await inquirer.prompt<{ mainBuilder: string }>([
                 {
@@ -553,7 +553,7 @@ function addElectronTargets(rendererName: string): Rule {
                 },
                 rendererTargets: [
                     {
-                        target: `${rendererName}:build`,
+                        target: `${rendererName}:build:development`,
                         options: {
                             outputPath: `dist/${rendererName}-electron/renderer`,
                             baseHref: './index.html',
@@ -681,7 +681,7 @@ function addElectronProject(appName: string, name: string, mainName: string, ren
                                 },
                                 rendererTargets: [
                                     {
-                                        target: `${rendererName}:build`,
+                                        target: `${rendererName}:build:development`,
                                         options: {
                                             outputPath: `dist/${name}/renderer`,
                                             baseHref: './index.html',
