@@ -52,7 +52,9 @@ Create a new empty Angular workspace, then install @da-mkay/ng-builder-electron:
 
 (Using the tag `ng12`, the Angular 12 compatible version will be installed)
 
-Then create your Angular app.
+When prompted hit enter to use the default values.
+
+Then create your app projects.
 
     $ ng generate @da-mkay/ng-builder-electron:app
 
