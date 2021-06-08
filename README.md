@@ -40,7 +40,9 @@ Create a new empty Angular workspace, then install @da-mkay/ng-builder-electron:
     $ cd myworkspace
     $ ng add @da-mkay/ng-builder-electron
 
-Then create your Angular app.
+When prompted hit enter to use the default values.
+
+Then create your app projects.
 
     $ ng generate @da-mkay/ng-builder-electron:app
 
